@@ -1,0 +1,17 @@
+{
+  "configs" :
+    [
+      {
+        "environment" : "development",
+        "parameters" : {
+          "catalog" : "demo_d"
+        }
+      },
+      {
+        "environment" : "production",
+        "parameters" : {
+          "catalog" : "demo_p"
+        }
+      }
+    ]
+}

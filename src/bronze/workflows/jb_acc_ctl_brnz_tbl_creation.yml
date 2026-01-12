@@ -1,0 +1,46 @@
+resources:
+  jobs:
+    jb_acc_ctl_brnz_ddl: # Job Key
+      name: jb_acc_ctl_brnz_tbl_creation # Job Name
+      email_notifications:
+        on_start: # Notification Email is Sent to the Provided Mail ID, When the Job Starts
+          - oindrila.schakraborty88@gmail.com
+        on_success: # Notification Email is Sent to the Provided Mail ID, When the Job Succeeds
+          - oindrila.schakraborty88@gmail.com
+        on_failure: # Notification Email is Sent to the Provided Mail ID, When the Job Fails
+          - oindrila.schakraborty88@gmail.com
+      tasks:
+        - task_key: tsk_acc_ctl_dist_lst_brnz_ddl
+          notebook_task:
+            notebook_path: ${var.filename_param}/src/bronze/ddl/nb_dist_lst_ctl_tbl_brnz_ddl
+            source: WORKSPACE
+          job_cluster_key: acc_ctl_brnz_job_cluster
+        - task_key: tsk_acc_ctl_tbl_lst_brnz_ddl
+          depends_on:
+            - task_key: tsk_acc_ctl_dist_lst_brnz_ddl
+          notebook_task:
+            notebook_path: ${var.filename_param}/src/bronze/ddl/nb_dt_obj_lst_for_acc_ctl_brnz_ddl
+            source: WORKSPACE
+          job_cluster_key: acc_ctl_brnz_job_cluster
+      job_clusters:
+        - job_cluster_key: acc_ctl_brnz_job_cluster
+          new_cluster:
+            cluster_name: ""
+            spark_version: ${var.spark_version}
+            node_type_id: ${var.node_type}
+            data_security_mode: USER_ISOLATION
+            runtime_engine: STANDARD
+            autoscale:
+              min_workers: 1
+              max_workers: 4
+      parameters:
+        - name: environment
+          default: ${var.jb_env}
+      tags:
+        jb_env: ${var.jb_env}
+        jb_owner: ${var.jb_owner}
+      queue:
+        enabled: true
+      run_as:
+        user_name: ${var.jb_run_as}
+        
