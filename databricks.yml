@@ -1,0 +1,43 @@
+# Filename: databricks.yml
+bundle:
+  name: DW-DEMO
+
+include:
+  # DDL
+  - "src/bronze/workflows/jb_acc_ctl_brnz_tbl_creation.yml" # Control Tables DDL for Access Control Implementation
+
+variables:
+  jb_env:
+    default: "development"
+  jb_owner: 
+    default: "Oindrila Chakraborty"
+  jb_run_as:
+    default: "oindrila.schakraborty88@gmail.com"
+  filename_param:  
+    default: "/Users/d44c1af5-e99e-4010-8302-464e74d13ba1/.bundle/files"
+  spark_version:
+    default: "17.3.x-scala2.13.16"
+  node_type:
+    default: "Standard_DS3_v2"
+
+targets:
+  development:
+    mode: development
+    workspace:
+      host: "https://dbc-e23f01cd-de6d.cloud.databricks.com/"
+      root_path: /Users/d44c1af5-e99e-4010-8302-464e74d13ba1/.bundle/${bundle.name}
+    variables:
+      jb_env: "development"
+    permissions:
+      - level: CAN_MANAGE
+        group_name: ${var.jb_run_as}
+  production:
+    mode: production
+    workspace:
+      host: "https://gevernova-hq-dbr.cloud.databricks.com"
+      root_path: /Users/d44c1af5-e99e-4010-8302-464e74d13ba1/.bundle/${bundle.name}
+    variables:
+      jb_env: "production"
+    permissions:
+      - level: CAN_MANAGE
+        group_name: ${var.jb_run_as}
